@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
 
 	"firebase.google.com/go/messaging"
 )
@@ -13,10 +13,11 @@ import (
 var client *messaging.Client
 
 func main() {
-	httpPort := os.Getenv("PORTALRH_FCM_HTTP_PORT")
-	if _, err := strconv.Atoi(httpPort); err != nil {
-		log.Fatalf("erro com a env PORTALRH_FCM_HTTP_PORT: %v", err)
-	}
+	portPtr := flag.String("p", "8290", "porta http")
+
+	flag.Parse()
+
+	fmt.Println(*portPtr)
 
 	var err error
 	client, err = messagingClient(context.Background())
@@ -25,6 +26,6 @@ func main() {
 	}
 
 	router := httpServer()
-	log.Printf("painco-portalrh-fcm escutando http na porta %v\n", httpPort)
-	http.ListenAndServe(":"+httpPort, router)
+	log.Printf("painco-portalrh-fcm escutando http na porta %v\n", *portPtr)
+	http.ListenAndServe(":"+(*portPtr), router)
 }
