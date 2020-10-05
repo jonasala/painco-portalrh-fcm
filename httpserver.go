@@ -16,7 +16,7 @@ func httpServer() *chi.Mux {
 
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
-	router.Use(middleware.Timeout(60 * time.Second))
+	router.Use(middleware.Timeout(10 * time.Second))
 
 	router.Post("/nova-notificacao", func(w http.ResponseWriter, r *http.Request) {
 		mensagem := &Mensagem{}
